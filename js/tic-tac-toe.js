@@ -1,3 +1,4 @@
+//Counter to hold the game values
 var counter = 0;
 var max_value = 8;
 var star = new Array();
@@ -22,31 +23,17 @@ var player2 = -1;
 var emptyCell = 0;
 var gameWinner = 0;
 
+//Player 1 & score
 var player1score = 0;
 var player2score = 0;
+
+//Player 2 or computer
 var againstComputer = 0;
 
+//Game count
 var totalGames = 0;
 var drawCount = 0;
 
-$.fn.pulsate = function( number, time){
- //  for(var i = 0; i < number; i++){
-
- 	this.fadeIn(time).delay(2000).fadeOut(time).stop();
-   //	this.animate({width:120,height:120}).animate(width:"",height:"");
-      // this.fadeIn(time).fadeOut(time);
-      // if(i != number - 1) this.delay(time);
-//   }
-   return this;
-}
-
-$( '.gameCell').hover(
-  function() {
-    $( this ).append( $( "<span> ***</span>" ) );
-  }, function() {
-    $( this ).find( "span:last" ).remove();
-  }
-);
 
 /*-------------------------------------------------------------------------------------------------
 Game cell Display
@@ -60,32 +47,10 @@ console.log("inside .gameCell");
 
 	name = name.substring(4);
 
-//	console.log(name.substring(4));
-
-var iterstring = name;
-
-	var containerstring = "#cell" + iterstring.toString()
-	var container = $(containerstring);
-
-	
-
-	//container.pulsate(4,500);
-
-// 	container.animate({
-//   height: "toggle",
-//   opacity: .5
-// }, "slow" );
-
-// container.animate({
-//     width: [ "toggle", "swing" ],
-//     height: [ "toggle", "swing" ],
-//     opacity: "toggle"
-//   }, 5000, "linear");
 
 	//When the game cell is empty valid move
 	if(star[name] == 0 && gameWinner == 0)
 	{
-		console.log(gameWinner);
 
 		//double checking the maximum count
 		if(counter <= max_value)
@@ -137,23 +102,34 @@ var iterstring = name;
 				}
 			}
 			
-
+			//When there is Winner
 			if(gameWinner == 1 || gameWinner == -1)
 			{
+				//Player 1 is the winner
 				if(gameWinner == 1)
 				{
+					//increments the Player 1 score
 					player1score = player1score + 1;
 					var count = 'Player 1 -' +player1score.toString();
 					$('#play1val').text(count);
 				}
+				//Player 2 or computer is the winner 
 				else if(gameWinner == -1)
 				{
 					player2score = player2score + 1;
-					var count = 'Player 2 -' +player2score.toString();
+					//increments the compuetr score
+					if(againstComputer == 1)
+					{
+						var count = 'Computer -' +player2score.toString();
+					}
+					//increments the Player 2 score
+					else if(againstComputer == 0)
+					{
+						var count = 'Player 2 -' +player2score.toString();
+					}
 					$('#play2val').text(count);
 				}
-				console.log("inside color change grid");
-
+				
 				//Call animate winner cell to animate the 3 cells
 
 				AnimateWinnerCell();
@@ -175,7 +151,7 @@ var iterstring = name;
 			drawCount = drawCount + 1;
 			console.log(drawCount);
 
-			$('#drawval').text('Draw Games -' + drawCount);
+			$('#drawval').text('Tie Games -' + drawCount);
 
 			totalGames = totalGames + 1;
 			$('#totalval').text('Total Games -' +totalGames);
@@ -200,7 +176,7 @@ var iterstring = name;
 			drawCount = drawCount + 1;
 			console.log(drawCount);
 
-			$('#drawval').text('Draw Games -' + drawCount);
+			$('#drawval').text('Tie Games -' + drawCount);
 
 			totalGames = totalGames + 1;
 			$('#totalval').text('Total Games -' +totalGames);
@@ -323,18 +299,17 @@ Animate Winner cell
 -------------------------------------------------------------------------------------------------*/
 function AnimateWinnerCell()
 {
-	console.log("inside AnimateWinnerCell");
 
-
+	//Updates the winner cell with different color
 	if(gameWinner == 1)
 	{
 
 		for(var index = 0; index < 3; index++)
 		{
 			var cellname = 'cell' + winnerArray[index];
-			console.log(cellname);
-
+			
 			$('#'+cellname).css("background-image", "url(../images/Player1_win.jpg)");
+
 		}
 	}
 	else if(gameWinner == -1)
@@ -343,7 +318,6 @@ function AnimateWinnerCell()
 		for(var index = 0; index < 3; index++)
 		{
 			var cellname = 'cell' + winnerArray[index];
-			console.log(cellname);
 
 			$('#'+cellname).css("background-image", "url(../images/Player2_win.jpg)");
 		}
@@ -357,9 +331,15 @@ Start new game
 -------------------------------------------------------------------------------------------------*/
 $('#newgame').click(function() {
 	
-	console.log("new game button");
-	//Reset all the variables
-	resetValues();
+	if(counter == 0)
+	{
+		alert("Nothing to reset");
+	}
+	else
+	{
+		//Reset all the variables
+		resetValues();
+	}
 
 });
 
@@ -368,36 +348,45 @@ Reset counter and start new game
 -------------------------------------------------------------------------------------------------*/
 $('#resetcount').click(function() {
 	
-	
-	//Reset all the variables
-	resetValues();
+	if(counter == 0)
+	{
+		alert("Nothing to reset");
+	}
+	else
+	{
+		//Reset all the variables
+		resetValues();
 
-	//Reset winner counter
-	resetScore();
+		//Reset winner counter
+		resetScore();
+	}
 
 });
 
 $('#computer').click(function() {
 
-	console.log("computer");
+	var count = 0;
 
 	if (this.checked)
 	{ 
 		againstComputer = 1;
-		console.log('checked');
+		$('#play2val').text('Computer -' +count);
 	}
 	else
 	{
 		againstComputer = 0;
-		console.log("unchecked");
+		$('#play2val').text('Player 2 -' +count);
 	}
 
-
+	//reset all the counters and images when Player option is changed
+	resetValues();
+	resetScore();
 
 });
 
-
-
+/*-------------------------------------------------------------------------------------------------
+Reset the current values for Start new game option
+-------------------------------------------------------------------------------------------------*/
 function resetValues()
 {
 	//empty cell counter
@@ -420,14 +409,17 @@ function resetValues()
 	winnerArray[2] = -1;
 
 	gameWinner = 0;
-	//$('.gameCell').css("background-image", "url(../images/empty.jpeg)");
 
+	//Reset the cell images
 	$('.gameCell').css('background-color', 'white');
 	$('.gameCell').css('background-image', '');
 
 	
 }
 
+/*-------------------------------------------------------------------------------------------------
+Reset the counter for Resetting the whole series
+-------------------------------------------------------------------------------------------------*/
 function resetScore()
 {
 	//reset the score
@@ -436,17 +428,31 @@ function resetScore()
 
 	var count = 0;
 	$('#play1val').text('Player 1 -' +count);
-	$('#play2val').text('Player 2 -' +count);
-	$('#drawval').text('Draw Games -' +count);
+	
+	$('#drawval').text('Tie Games -' +count);
 	$('#totalval').text('Total Games - ' +count);
+
+	// Player 2 or Computer will be displayed - depending on the option
+	if(againstComputer == 1)
+	{
+		$('#play2val').text('Computer -' +count);
+	}
+	else if(againstComputer == 0)
+	{
+		$('#play2val').text('Player 2 -' +count);
+	}
 }
 
+/*-------------------------------------------------------------------------------------------------
+When played against computer detects computer move
+-------------------------------------------------------------------------------------------------*/
 function computerMove()
 {
 	var index=-1;
 
 	console.log("computerMove"+counter);
 
+	//Executes for the first computer move
 	if(counter == 0)
 	{
 		if(star[4] == 0)
@@ -458,8 +464,8 @@ function computerMove()
 			index = 0;
 		}
 
-		console.log("inside index inside if"+index);
 	}
+	//When 2 player moves where made
 	else
 	{
 		if(star[0] == 1 && star[1] == 1 && star[2] == 0)
@@ -558,13 +564,12 @@ function computerMove()
 		{
 			index = 2;
 		}
-		console.log("inside index else"+index);
-		console.log("inside "+star[index]);
 	}
 
+	//when Player 1 does not occupy any 2 cell straight
 	if(index == -1)
 	{
-		console.log("inside index -1");
+		//checks for the first avaiable cell
 		for(var i =0;i<=max_value;i++)
 		{
 			if(star[i] == 0)
@@ -575,11 +580,10 @@ function computerMove()
 	}
 
 	var cellname = 'cell' + index;
-	console.log("cellname"+cellname);
 
 	$('#'+cellname).css("background-image", "url(../images/Player2.jpeg)");
 
+	//Assigns the cell to compuetr
 	star[index] = -1;
-	console.log("Player2:"+index);
 }
 
