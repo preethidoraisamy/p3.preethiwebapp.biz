@@ -348,7 +348,7 @@ Reset counter and start new game
 -------------------------------------------------------------------------------------------------*/
 $('#resetcount').click(function() {
 	
-	if(counter == 0)
+	if(counter == 0 && totalGames == 0)
 	{
 		alert("Nothing to reset");
 	}
@@ -425,6 +425,8 @@ function resetScore()
 	//reset the score
 	player1score = 0;
 	player2score = 0;
+	totalGames = 0;
+	drawCount = 0;
 
 	var count = 0;
 	$('#play1val').text('Player 1 -' +count);

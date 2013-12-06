@@ -3,7 +3,7 @@ Color picker
 -------------------------------------------------------------------------------------------------*/
 .gameCell {
 	cursor:pointer;
-	width:90px;
+	width:85px;
 	height:90px;
 	float:left;
 	margin-right:2px;
